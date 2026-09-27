@@ -4,1198 +4,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Preço da Casa - Hub de Preços Domésticos</title>
-  <style>
-    :root {
-      --bg: #f6faf8;
-      --card: #fff;
-      --text: #172a24;
-      --muted: #71817b;
-      --line: #e3ece8;
-      --green: #198754;
-      --green-soft: #e8f7ef;
-      --red: #dc5a61;
-      --red-soft: #fff0f1;
-      --yellow: #d99b27;
-      --yellow-soft: #fff8e8;
-      --shadow: 0 8px 24px rgba(34, 70, 55, .06);
-    }
-
-    * {
-      box-sizing: border-box
-    }
-
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
-      background: var(--bg);
-      color: var(--text)
-    }
-
-    button,
-    input,
-    select {
-      font: inherit
-    }
-
-    button {
-      cursor: pointer
-    }
-
-    .app {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      min-height: 100vh
-    }
-
-    .sidebar {
-      background: #fff;
-      border-right: 1px solid var(--line);
-      padding: 22px 14px;
-      display: flex;
-      flex-direction: column
-    }
-
-    .brand {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      padding: 0 10px 26px
-    }
-
-    .logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: var(--green-soft);
-      display: grid;
-      place-items: center;
-      font-size: 21px
-    }
-
-    .brand b {
-      font-size: 17px
-    }
-
-    .brand small {
-      display: block;
-      color: var(--muted);
-      font-size: 10px
-    }
-
-    nav {
-      display: grid;
-      gap: 6px
-    }
-
-    .nav {
-      border: 0;
-      background: transparent;
-      text-align: left;
-      padding: 11px 13px;
-      border-radius: 11px;
-      color: #61736d;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      cursor: pointer
-    }
-
-    .nav.active,
-    .nav:hover {
-      background: var(--green-soft);
-      color: var(--green);
-      font-weight: 650
-    }
-
-    .sidebar-foot {
-      margin-top: auto;
-      background: #eef9f4;
-      padding: 16px;
-      border-radius: 14px;
-      color: #537269;
-      font-size: 12px
-    }
-
-    main {
-      min-width: 0
-    }
-
-    .topbar {
-      height: 72px;
-      background: #fff;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      padding: 0 24px
-    }
-
-    .search {
-      height: 42px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      padding: 0 13px;
-      gap: 10px;
-      flex: 1;
-      max-width: 620px;
-      color: #82918c
-    }
-
-    .search input {
-      border: 0;
-      outline: 0;
-      width: 100%;
-      font-size: 13px;
-      background: transparent
-    }
-
-    .location {
-      margin-left: auto;
-      color: #536660;
-      font-size: 13px
-    }
-
-    .avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #eaf3f0;
-      display: grid;
-      place-items: center
-    }
-
-    .content {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: minmax(360px, .85fr) minmax(650px, 1.4fr);
-      gap: 18px
-    }
-
-    .content.single-col {
-      grid-template-columns: 1fr
-    }
-
-    .intro {
-      grid-column: 1/-1;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px 22px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      box-shadow: var(--shadow)
-    }
-
-    .intro-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--green-soft);
-      display: grid;
-      place-items: center;
-      font-size: 25px
-    }
-
-    .intro h2 {
-      font-size: 17px;
-      margin: 0 0 5px
-    }
-
-    .intro p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-left: auto
-    }
-
-    .stat {
-      padding: 11px 13px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      min-width: 130px
-    }
-
-    .stat small {
-      color: var(--muted);
-      font-size: 10px
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 17px;
-      margin-top: 4px
-    }
-
-    .down {
-      color: var(--green)
-    }
-
-    .up {
-      color: var(--red)
-    }
-
-    .stable {
-      color: var(--yellow)
-    }
-
-    .stat-clickable {
-      cursor: pointer;
-      transition: .15s
-    }
-
-    .stat-clickable:hover {
-      border-color: #52b98d;
-      background: var(--green-soft)
-    }
-
-    .panel {
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      overflow: hidden
-    }
-
-    .panel-head {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between
-    }
-
-    .panel-head h3 {
-      margin: 0;
-      font-size: 14px
-    }
-
-    .panel-head select,
-    .filters button {
-      border: 1px solid var(--line);
-      background: white;
-      border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 11px;
-      color: #52635d;
-      cursor: pointer
-    }
-
-    .products {
-      padding: 8px;
-      max-height: 650px;
-      overflow-y: auto
-    }
-
-    .product {
-      border: 1px solid transparent;
-      border-radius: 12px;
-      padding: 10px;
-      display: grid;
-      grid-template-columns: 58px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      cursor: pointer
-    }
-
-    .product:hover,
-    .product.selected {
-      border-color: #a9dcc3;
-      background: #fbfefc
-    }
-
-    .thumb {
-      width: 58px;
-      height: 58px;
-      border-radius: 9px;
-      background: #f2f5f3;
-      display: grid;
-      place-items: center;
-      font-size: 27px
-    }
-
-    .product b {
-      font-size: 12px
-    }
-
-    .product small {
-      display: block;
-      color: var(--muted);
-      margin-top: 3px
-    }
-
-    .price {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--green);
-      margin-top: 5px
-    }
-
-    .market {
-      font-size: 10px;
-      color: #6f8179
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 7px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 700
-    }
-
-    .badge.low {
-      background: var(--green-soft);
-      color: var(--green)
-    }
-
-    .badge.high {
-      background: var(--red-soft);
-      color: var(--red)
-    }
-
-    .badge.normal {
-      background: var(--yellow-soft);
-      color: var(--yellow)
-    }
-
-    .variation {
-      text-align: right;
-      font-size: 11px;
-      margin-top: 8px;
-      font-weight: 700
-    }
-
-    .detail {
-      padding: 18px
-    }
-
-    .detail-top {
-      display: flex;
-      align-items: center;
-      gap: 14px
-    }
-
-    .detail-thumb {
-      width: 76px;
-      height: 76px;
-      background: #f2f5f3;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      font-size: 37px
-    }
-
-    .detail-title {
-      flex: 1
-    }
-
-    .detail-title h1 {
-      font-size: 21px;
-      margin: 0 0 4px
-    }
-
-    .detail-title p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px
-    }
-
-    .current {
-      border: 1px solid #cce9db;
-      background: #fbfffd;
-      border-radius: 12px;
-      padding: 11px 15px;
-      min-width: 150px;
-      cursor: pointer;
-      transition: .15s
-    }
-
-    .current:hover {
-      background: #f0faf5
-    }
-
-    .current strong {
-      display: block;
-      color: var(--green);
-      font-size: 22px
-    }
-
-    .current small {
-      color: var(--green);
-      font-size: 10px
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 16px 0
-    }
-
-    .metric {
-      background: #f9fbfa;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 11px
-    }
-
-    .metric small {
-      color: var(--muted);
-      font-size: 10px
-    }
-
-    .metric strong {
-      display: block;
-      margin-top: 4px;
-      font-size: 13px
-    }
-
-    .chart-wrap {
-      border: 1px solid var(--line);
-      border-radius: 13px;
-      padding: 12px
-    }
-
-    .chart-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 7px
-    }
-
-    .chart-head b {
-      font-size: 13px
-    }
-
-    .legend {
-      font-size: 10px;
-      color: var(--muted)
-    }
-
-    canvas {
-      width: 100%;
-      height: 220px;
-      display: block
-    }
-
-    .periods {
-      display: flex;
-      gap: 6px;
-      margin-top: 5px
-    }
-
-    .periods button {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 10px;
-      color: #60716b;
-      cursor: pointer
-    }
-
-    .periods button.active {
-      border-color: #58b98c;
-      color: var(--green);
-      background: var(--green-soft)
-    }
-
-    .market-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 20px 0 10px
-    }
-
-    .market-title h3 {
-      font-size: 14px;
-      margin: 0
-    }
-
-    .filters {
-      display: flex;
-      gap: 7px
-    }
-
-    .market-row {
-      display: grid;
-      grid-template-columns: 1.3fr .7fr .9fr .8fr .65fr;
-      align-items: center;
-      padding: 11px 12px;
-      border-bottom: 1px solid var(--line);
-      font-size: 11px
-    }
-
-    .market-row.header {
-      color: var(--muted);
-      font-size: 10px
-    }
-
-    .market-row:last-child {
-      border-bottom: 0
-    }
-
-    .market-row strong {
-      font-size: 13px;
-      color: var(--green)
-    }
-
-    .offer {
-      border: 1px solid #cfe8db;
-      background: #fbfffd;
-      color: var(--green);
-      border-radius: 7px;
-      padding: 5px 8px;
-      font-size: 10px;
-      cursor: pointer
-    }
-
-    .offer:hover {
-      background: var(--green-soft)
-    }
-
-    .notice {
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      background: var(--green-soft);
-      color: #32765a;
-      font-size: 11px
-    }
-
-    .sim-controls {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px
-    }
-
-    .sim-btn {
-      background: var(--green-soft);
-      color: var(--green);
-      border: 1px solid #a9dcc3;
-      border-radius: 6px;
-      padding: 2px 8px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer
-    }
-
-    .sim-btn:hover {
-      background: #d2f2e2
-    }
-
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.4);
-      display: grid;
-      place-items: center;
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
-      transition: .2s
-    }
-
-    .modal-overlay.active {
-      opacity: 1;
-      pointer-events: auto
-    }
-
-    .modal {
-      background: #fff;
-      width: 100%;
-      max-width: 520px;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      max-height: 85vh;
-      overflow-y: auto
-    }
-
-    .modal h3 {
-      margin-top: 0;
-      font-size: 18px;
-      margin-bottom: 16px
-    }
-
-    .btn-pri {
-      background: var(--green);
-      color: #fff;
-      border: 0;
-      padding: 9px 16px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer
-    }
-
-    @media(max-width:1100px) {
-      .app {
-        grid-template-columns: 72px 1fr
-      }
-
-      .brand div:not(.logo),
-      .nav span,
-      .sidebar-foot {
-        display: none
-      }
-
-      .brand {
-        padding: 0 3px 24px
-      }
-
-      .nav {
-        justify-content: center
-      }
-
-      .content {
-        grid-template-columns: 1fr
-      }
-
-      .intro {
-        grid-column: auto
-      }
-
-      .stats {
-        display: none
-      }
-    }
-
-    @media(max-width:700px) {
-      .app {
-        display: block
-      }
-
-      .sidebar {
-        display: none
-      }
-
-      .content {
-        padding: 12px
-      }
-
-      .topbar {
-        padding: 0 12px
-      }
-
-      .location {
-        display: none
-      }
-
-      .metrics {
-        grid-template-columns: repeat(2, 1fr)
-      }
-
-      .detail-top {
-        flex-wrap: wrap
-      }
-
-      .current {
-        margin-left: auto
-      }
-
-      .market-row {
-        grid-template-columns: 1fr .7fr .8fr
-      }
-
-      .market-row>*:nth-child(3),
-      .market-row>*:nth-child(4) {
-        display: none
-      }
-
-      .intro {
-        align-items: flex-start
-      }
-    }
-  </style>
+  <title>Vigia do Preço - Hub de Preços do Centro-Oeste</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="app">
     <aside class="sidebar">
       <div class="brand">
-        <div class="logo">👀</div>
-        <div><b>Vigia do preço</b><small></small></div>
+        <div class="logo">🦉</div>
+        <div><b>Vigia do Preço</b><small>Centro-Oeste 2026</small></div>
       </div>
       <nav id="sidebar-nav">
-        <button class="nav active" onclick="switchTab('inicio')">⌂ <span>Início</span></button>
-        <button class="nav" onclick="switchTab('produtos')">▦ <span>Produtos</span></button>
-        <button class="nav" onclick="switchTab('historico')">⌁ <span>Histórico de Preços</span></button>
-        <button class="nav" onclick="switchTab('mercados')">⇄ <span>Comparar Mercados</span></button>
-        <button class="nav" onclick="switchTab('alertas')">♧ <span>Alertas</span></button>
+        <button class="nav active" onclick="switchTab('inicio')">⌂ <span>Visão Geral</span></button>
+        <button class="nav" onclick="switchTab('produtos')">▦ <span>Comparador Detalhado</span></button>
+        <button class="nav" onclick="switchTab('historico')">📊 <span>Relatórios & Novidades</span></button>
+        <button class="nav" onclick="switchTab('mercados')">📍 <span>Perto de Mim</span></button>
+        <button class="nav" onclick="switchTab('alertas')">♧ <span>Meus Alertas</span></button>
         <button class="nav" onclick="switchTab('config')">⚙ <span>Configurações</span></button>
       </nav>
       <div class="sidebar-foot">
-        Acompanhe os preços e descubra onde comprar mais barato na região de Brasília.
+        O Vigia não dorme! Nossa coruja compara os preços das maiores redes de Goiás, Distrito Federal, Mato Grosso e Mato Grosso do Sul.
       </div>
     </aside>
     <main>
       <header class="topbar">
-        <div class="search">⌕ <input id="search" placeholder="Busque por produtos (ex.: arroz, leite, café...)"></div>
-        <div class="location">⌖ Brasília - DF ⌄</div>
-        <div class="avatar" title="Perfil do Usuário">●</div>
+        <div style="font-weight:700; color:var(--brand-dark); font-size:15px; display:flex; align-items:center; gap:6px;">
+          <span>🦉</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">Vigia Centro-Oeste</span>
+        </div>
+        
+        <div class="location-selector">
+          <span>📍</span>
+          <select id="global-region-select" onchange="changeGlobalRegion(this.value)">
+            <option value="Todas">Centro-Oeste (Todas as Regiões)</option>
+            <option value="DF">Distrito Federal (Brasília e Entorno)</option>
+            <option value="GO">Goiás (Goiânia, Anápolis, Rio Verde)</option>
+            <option value="MT">Mato Grosso (Cuiabá, Rondonópolis, V. Grande)</option>
+            <option value="MS">Mato Grosso do Sul (Campo Grande, Dourados)</option>
+          </select>
+        </div>
+        
+        <button class="cart-toggle-btn" onclick="openSimulatorModal()">
+          🛒 <span id="cart-total-header">R$ 0,00</span>
+        </button>
+
+        <button class="login-btn" id="topbar-auth-btn" onclick="openLoginModal()">
+          🔒 Entrar
+        </button>
       </header>
+
+      <!-- Barra de Navegação Inferior para Celulares (Expandível) -->
+      <div style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--brand-dark); z-index:50; padding:10px 16px; justify-content:space-around; align-items:center; border-top:1px solid rgba(255,255,255,0.1);" id="mobile-bottom-nav">
+        <button onclick="switchTab('inicio')" id="mob-nav-inicio" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">⌂ <span style="font-size:10px">Início</span></button>
+        <button onclick="switchTab('produtos')" id="mob-nav-produtos" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">▦ <span style="font-size:10px">Comparar</span></button>
+        <button onclick="switchTab('alertas')" id="mob-nav-alertas" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">♧ <span style="font-size:10px">Alertas</span></button>
+        <button onclick="switchTab('mercados')" id="mob-nav-mercados" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">📍 <span style="font-size:10px">Perto</span></button>
+        <button onclick="toggleMobileMenu()" style="background:none;color:var(--brand-accent);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;">☰ <span style="font-size:10px">Mais</span></button>
+      </div>
+
+      <!-- Gaveta Expandível do Menu Mobile -->
+      <div class="mobile-menu-drawer" id="mobileMenuDrawer">
+        <button class="mobile-drawer-btn" id="drawer-nav-inicio" onclick="switchTab('inicio'); toggleMobileMenu();">⌂ Visão Geral</button>
+        <button class="mobile-drawer-btn" id="drawer-nav-produtos" onclick="switchTab('produtos'); toggleMobileMenu();">▦ Comparador Detalhado</button>
+        <button class="mobile-drawer-btn" id="drawer-nav-historico" onclick="switchTab('historico'); toggleMobileMenu();">📊 Relatórios & Novidades</button>
+        <button class="mobile-drawer-btn" id="drawer-nav-mercados" onclick="switchTab('mercados'); toggleMobileMenu();">📍 Perto de Mim</button>
+        <button class="mobile-drawer-btn" id="drawer-nav-alertas" onclick="switchTab('alertas'); toggleMobileMenu();">♧ Meus Alertas</button>
+        <button class="mobile-drawer-btn" id="drawer-nav-config" onclick="switchTab('config'); toggleMobileMenu();">⚙ Configurações</button>
+      </div>
+
       <section class="content" id="main-content">
         <!-- Dynamic View Content -->
       </section>
     </main>
   </div>
 
-  <!-- Modal: Simulador de Compras (Itens Selecionados) -->
+  <!-- Modal: Simulador de Compras (Cesta) com Rota Otimizada -->
   <div class="modal-overlay" id="simulatorModal">
-    <div class="modal">
+    <div class="modal" style="max-width: 580px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-        <h3 style="margin:0">🛒 Simulador de Compras (Cesta)</h3>
-        <button onclick="closeSimulatorModal()"
-          style="border:0;background:transparent;font-size:18px;cursor:pointer">&times;</button>
+        <h3 style="margin:0">🛒 Cesta do Vigia & Rota Maps</h3>
+        <button onclick="closeSimulatorModal()" style="border:0;background:transparent;font-size:24px;color:var(--muted);cursor:pointer">&times;</button>
       </div>
-      <p style="color:var(--muted);font-size:12px;margin-bottom:16px">Itens adicionados à sua simulação com os menores
-        preços atuais:</p>
-      <div id="simulator-items-list" style="display:grid;gap:10px;max-height:350px;overflow-y:auto;margin-bottom:16px">
-        <!-- Preenchido via JS -->
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Itens adicionados à sua simulação e mercados com os menores preços:</p>
+      
+      <div id="simulator-items-list" style="display:grid;gap:12px;max-height:300px;overflow-y:auto;margin-bottom:16px;padding-right:4px;">
+        <div style="text-align:center;color:var(--muted);padding:30px">Sua cesta está vazia. Adicione itens clicando nos botões <b>[+]</b> ao lado de cada produto.</div>
       </div>
-      <div
-        style="border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;align-items:center">
+      
+      <div style="border-top:1px solid var(--line);padding-top:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
         <div>
-          <small style="color:var(--muted)">Total Calculado da Cesta</small>
-          <strong id="simulator-modal-total" style="font-size:18px;color:var(--green);display:block">R$ 0,00</strong>
+          <small style="color:var(--muted);font-weight:600;">Total Calculado</small>
+          <strong id="simulator-modal-total" style="font-size:20px;color:var(--brand-dark);display:block;font-weight:800;">R$ 0,00</strong>
         </div>
-        <button class="btn-pri" onclick="closeSimulatorModal()">Concluir</button>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-pri" style="background:var(--brand-dark); width:auto; padding:10px 16px;" onclick="gerarRotaOtimizadaMaps()">🗺️ Rota Otimizada Maps</button>
+          <button class="btn-pri" style="width:auto; padding:10px 16px;" onclick="closeSimulatorModal()">Concluir</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <script>
-    let currentTab = 'inicio';
-    let selectedIndex = 0;
-    let simulatorCart = {}; // { productId: quantity }
-    let currentPeriod = '1A';
-
-    let products = [
-      { id: 1, name: "Arroz Tipo 1", size: "5 kg", emoji: "🍚", category: "Alimentos", price: 27.90, market: "Mercado X", status: "low", change: -11.1, unit: "R$ 5,58 / kg", precos: [{ market: "Mercado X", price: 27.90, unit: "R$ 5,58 / kg", date: "Há 2h" }, { market: "Mercado Y", price: 29.90, unit: "R$ 5,98 / kg", date: "Há 4h" }, { market: "Mercado Z", price: 31.49, unit: "R$ 6,30 / kg", date: "Há 6h" }] },
-      { id: 2, name: "Feijão Carioca", size: "1 kg", emoji: "🫘", category: "Alimentos", price: 7.49, market: "Mercado Y", status: "high", change: 8.4, unit: "R$ 7,49 / kg", precos: [{ market: "Mercado X", price: 8.20, unit: "R$ 8,20 / kg", date: "Ontem" }, { market: "Mercado Y", price: 7.49, unit: "R$ 7,49 / kg", date: "Há 3h" }, { market: "Mercado A", price: 8.50, unit: "R$ 8,50 / kg", date: "Há 1d" }] },
-      { id: 3, name: "Leite Integral", size: "1 L", emoji: "🥛", category: "Bebidas", price: 4.99, market: "Mercado Z", status: "low", change: -6.8, unit: "R$ 4,99 / L", precos: [{ market: "Mercado Z", price: 4.99, unit: "R$ 4,99 / L", date: "Há 1h" }, { market: "Mercado X", price: 5.40, unit: "R$ 5,40 / L", date: "Há 5h" }] },
-      { id: 4, name: "Óleo de Soja", size: "900 ml", emoji: "🫗", category: "Alimentos", price: 6.49, market: "Mercado A", status: "normal", change: -0.3, unit: "R$ 7,21 / L", precos: [{ market: "Mercado A", price: 6.49, unit: "R$ 7,21 / L", date: "Há 4h" }, { market: "Mercado B", price: 6.89, unit: "R$ 7,65 / L", date: "Há 8h" }] },
-      { id: 5, name: "Café Tradicional", size: "500 g", emoji: "☕", category: "Alimentos", price: 17.90, market: "Mercado B", status: "low", change: -12.6, unit: "R$ 35,80 / kg", precos: [{ market: "Mercado B", price: 17.90, unit: "R$ 35,80 / kg", date: "Há 2h" }, { market: "Mercado X", price: 19.50, unit: "R$ 39,00 / kg", date: "Há 1d" }] },
-      { id: 6, name: "Ovos Brancos", size: "30 un.", emoji: "🥚", category: "Hortifrúti", price: 16.90, market: "Mercado C", status: "normal", change: -1.2, unit: "R$ 0,56 / un.", precos: [{ market: "Mercado C", price: 16.90, unit: "R$ 0,56 / un.", date: "Há 3h" }] },
-      { id: 7, name: "Detergente Líquido", size: "500 ml", emoji: "🧴", category: "Limpeza", price: 2.19, market: "Mercado X", status: "low", change: -5.2, unit: "R$ 4,38 / L", precos: [{ market: "Mercado X", price: 2.19, unit: "R$ 4,38 / L", date: "Há 1h" }, { market: "Mercado Y", price: 2.69, unit: "R$ 5,38 / L", date: "Há 6h" }] }
-    ];
-
-    const marketsList = ["Mercado X", "Mercado Y", "Mercado Z", "Mercado A", "Mercado B"];
-    const brl = n => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-
-    function openGoogleMaps(marketName, productName) {
-      const query = encodeURIComponent(`${marketName} ${productName} Brasília DF`);
-      window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
-    }
-
-    function switchTab(tab) {
-      currentTab = tab;
-      document.querySelectorAll('.nav').forEach((btn, idx) => {
-        const tabs = ['inicio', 'produtos', 'historico', 'mercados', 'alertas', 'config'];
-        if (tabs[idx] === tab) btn.classList.add('active');
-        else btn.classList.remove('active');
-      });
-      render();
-    }
-
-    function calculateSimulatorTotal() {
-      let total = 0;
-      for (const id in simulatorCart) {
-        const qty = simulatorCart[id];
-        const prod = products.find(p => p.id == id);
-        if (prod) total += prod.price * qty;
-      }
-      return total;
-    }
-
-    function updateSimulatorStatDisplay() {
-      const el = document.getElementById('simulator-total-display');
-      if (el) el.textContent = brl(calculateSimulatorTotal());
-    }
-
-    function adjustQuantity(id, delta, event) {
-      if (event) event.stopPropagation();
-      if (!simulatorCart[id]) simulatorCart[id] = 0;
-      simulatorCart[id] += delta;
-      if (simulatorCart[id] <= 0) delete simulatorCart[id];
-
-      updateSimulatorStatDisplay();
-      renderProductsList();
-    }
-
-    function render() {
-      const container = document.getElementById('main-content');
-      container.className = "content";
-      const currentSimTotal = calculateSimulatorTotal();
-
-      if (currentTab === 'inicio' || currentTab === 'produtos') {
-        container.innerHTML = `
-      <div class="intro">
-        <div class="intro-icon">🛒</div>
-        <div>
-          <h2>O menor preço para a sua casa</h2>
-          <p>Compare preços, veja o histórico e descubra onde comprar mais barato na sua região.</p>
-        </div>
-        <div class="stats">
-          <div class="stat"><small>Economia Potencial</small><strong class="down">R$ 48,20</strong><small class="down">↓ 8,4%</small></div>
-          <div class="stat"><small>Produtos em Baixa</small><strong class="down">${products.filter(p => p.status === 'low').length}</strong></div>
-          <div class="stat stat-clickable" title="Clique para ver os itens selecionados" onclick="openSimulatorModal()">
-            <small>Simulador (Cesta)</small>
-            <strong id="simulator-total-display" style="color:var(--green)">${brl(currentSimTotal)}</strong>
-            <small style="color:var(--green)">Ver itens ›</small>
-          </div>
-        </div>
+  <!-- Modal Pop-up de Login -->
+  <div class="modal-overlay" id="loginModal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0">🦉 Acessar o Vigia</h3>
+        <button onclick="closeLoginModal()" style="border:0;background:transparent;font-size:24px;color:var(--muted);cursor:pointer">&times;</button>
       </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Entre com seus dados ou conta Google para gerenciar alertas e recebê-los por e-mail.</p>
+      
+      <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continuar com o Google
+      </button>
 
-      <div class="panel">
-        <div class="panel-head">
-          <h3>Produtos em Destaque & Simulador</h3>
-          <select id="sort-select" onchange="sortProducts(this.value)">
-            <option value="menor">Menor Preço</option>
-            <option value="desconto">Maior Desconto</option>
-            <option value="recente">Mais Recentes</option>
+      <div class="login-divider">ou entre com e-mail</div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-field">
+          <label>E-mail</label>
+          <input type="email" id="login-email" placeholder="seu.email@exemplo.com" required>
+        </div>
+        <div class="form-field" style="margin-bottom: 24px;">
+          <label>Senha</label>
+          <input type="password" id="login-senha" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-pri">Entrar no Sistema</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Pop-up para Adicionar ou Editar Alerta -->
+  <div class="modal-overlay" id="newAlertModal">
+    <div class="modal">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <h3 style="margin:0" id="modal-alerta-titulo">➕ Novo Alerta de Preço</h3>
+        <button onclick="closeNewAlertModal()" style="border:0;background:transparent;font-size:24px;color:var(--muted);cursor:pointer">&times;</button>
+      </div>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Defina o produto, preço alvo e configure os filtros geográficos e de redes.</p>
+      
+      <form onsubmit="salvarAlertaModal(event)">
+        <input type="hidden" id="modal-alerta-id" value="">
+
+        <div class="form-field">
+          <label>Produto Monitorado</label>
+          <select id="modal-alerta-produto" required>
+            <!-- Preenchido via script -->
           </select>
         </div>
-        <div class="products" id="products-list"></div>
-      </div>
 
-      <div class="panel detail" id="detail-panel"></div>
-    `;
-        renderProductsList();
-        if (products.length > 0) renderDetail(selectedIndex);
-      } else if (currentTab === 'historico') {
-        container.className = "content single-col";
-        renderHistoricoView(container);
-      } else if (currentTab === 'mercados') {
-        container.className = "content single-col";
-        renderMercadosView(container);
-      } else if (currentTab === 'alertas') {
-        container.className = "content single-col";
-        renderAlertasView(container);
-      } else if (currentTab === 'config') {
-        container.className = "content single-col";
-        renderConfigView(container);
-      }
-    }
-
-    function renderProductsList(filterText = '') {
-      const box = document.getElementById("products-list");
-      if (!box) return;
-      const filtered = products.filter(p => p.name.toLowerCase().includes(filterText) || p.category.toLowerCase().includes(filterText));
-
-      if (filtered.length === 0) {
-        box.innerHTML = `<div style="padding:20px;text-align:center;color:var(--muted)">Nenhum produto encontrado.</div>`;
-        return;
-      }
-
-      box.innerHTML = filtered.map((p) => {
-        const realIndex = products.indexOf(p);
-        const qty = simulatorCart[p.id] || 0;
-        return `
-      <div class="product ${realIndex === selectedIndex ? 'selected' : ''}" onclick="selectProduct(${realIndex})">
-        <div class="thumb">${p.emoji}</div>
-        <div>
-          <b>${p.name}</b>
-          <small>${p.size} • <span style="color:var(--green)">${p.category}</span></small>
-          <div class="price">${brl(p.price)} <span style="font-size:10px;color:#87948f;font-weight:500">/ ${p.size}</span></div>
-          <span class="market">▦ ${p.market} (Melhor Preço)</span>
-          <div class="sim-controls">
-            <span style="font-size:11px;color:var(--muted)">Simulador:</span>
-            <button class="sim-btn" onclick="adjustQuantity(${p.id}, -1, event)">-</button>
-            <span style="font-size:12px;font-weight:600;min-width:16px;text-align:center">${qty}</span>
-            <button class="sim-btn" onclick="adjustQuantity(${p.id}, 1, event)">+</button>
-          </div>
+        <!-- 1. Opção Principal: Estados -->
+        <div class="form-field">
+          <label>1. Filtrar por Estado / Região</label>
+          <select id="modal-alerta-estado" onchange="onAlertEstadoChange(this.value)" required>
+            <option value="todos">🌍 Todos os Estados (Centro-Oeste)</option>
+            <option value="DF">📍 Distrito Federal (DF)</option>
+            <option value="GO">📍 Goiás (GO)</option>
+            <option value="MT">📍 Mato Grosso (MT)</option>
+            <option value="MS">📍 Mato Grosso do Sul (MS)</option>
+          </select>
         </div>
-        <div>
-          <span class="badge ${p.status}">${p.status === "low" ? "↓ Baixa" : p.status === "high" ? "↑ Alta" : "— Estável"}</span>
-          <div class="variation ${p.change < 0 ? 'down' : p.change > 0 ? 'up' : 'stable'}">${p.change > 0 ? '+' : ''}${p.change.toFixed(1).replace('.', ',')}%<br><span style="font-weight:400">vs. média</span></div>
+
+        <!-- 2. Opção Condicional: Cidades -->
+        <div class="form-field" id="wrapper-cidades" style="display:none;">
+          <label>2. Filtrar por Cidade / Polo Específico</label>
+          <select id="modal-alerta-cidade">
+            <!-- Populado dinamicamente -->
+          </select>
         </div>
-      </div>
-    `;
-      }).join("");
-    }
 
-    function selectProduct(index) {
-      selectedIndex = index;
-      document.querySelectorAll(".product").forEach((el, i) => {
-        if (i === index) el.classList.add("selected");
-        else el.classList.remove("selected");
-      });
-      renderDetail(index);
-    }
-
-    function renderDetail(index) {
-      const p = products[index];
-      const detail = document.getElementById("detail-panel");
-      if (!detail) return;
-
-      const minHist = p.price * 0.95;
-      const maxHist = p.price * 1.25;
-      const avgHist = p.price * 1.08;
-
-      detail.innerHTML = `
-    <div class="detail-top">
-      <div class="detail-thumb">${p.emoji}</div>
-      <div class="detail-title"><h1>${p.name}</h1><p>${p.size} • ${p.market}</p></div>
-      <div class="current" title="Ver no Google Maps" onclick="openGoogleMaps('${p.market}', '${p.name}')">
-        <strong>${brl(p.price)}</strong>
-        <small>MENOR PREÇO ATUAL ↗</small>
-        <div class="badge low" style="margin-top:7px">${p.status === 'low' ? 'Baixa' : 'Estável'} ${p.change}%</div>
-      </div>
-    </div>
-    <div class="metrics">
-      <div class="metric"><small>Menor preço histórico</small><strong>${brl(minHist)}</strong></div>
-      <div class="metric"><small>Maior preço histórico</small><strong>${brl(maxHist)}</strong></div>
-      <div class="metric"><small>Média 12 meses</small><strong>${brl(avgHist)}</strong></div>
-      <div class="metric"><small>Preço atual</small><strong>${brl(p.price)}</strong></div>
-    </div>
-    <div class="chart-wrap">
-      <div class="chart-head"><b>Relatórios <span style="font-weight:500;color:#87948f">(período: ${currentPeriod})</span></b><span class="legend">● Mercado X ● Mercado Y ● Mercado Z</span></div>
-      <canvas id="chart"></canvas>
-      <div class="periods">
-        <button class="${currentPeriod === '1D' ? 'active' : ''}" onclick="setPeriod(this,'1D')">1D</button>
-        <button class="${currentPeriod === '1S' ? 'active' : ''}" onclick="setPeriod(this,'1S')">1S</button>
-        <button class="${currentPeriod === '1M' ? 'active' : ''}" onclick="setPeriod(this,'1M')">1M</button>
-        <button class="${currentPeriod === '3M' ? 'active' : ''}" onclick="setPeriod(this,'3M')">3M</button>
-        <button class="${currentPeriod === '6M' ? 'active' : ''}" onclick="setPeriod(this,'6M')">6M</button>
-        <button class="${currentPeriod === '1A' ? 'active' : ''}" onclick="setPeriod(this,'1A')">1A</button>
-        <button class="${currentPeriod === 'MAX' ? 'active' : ''}" onclick="setPeriod(this,'MAX')">MÁX</button>
-      </div>
-    </div>
-    <div class="market-title"><h3>Supermercados com oferta</h3><span style="font-size:11px;color:var(--muted)">Clique em "Ver oferta" para abrir no Maps</span></div>
-    <div class="market-row header"><span>Mercado</span><span>Preço</span><span>Preço por unidade</span><span>Atualizado</span><span>Ação</span></div>
-    <div id="markets-rows">
-      ${p.precos.map((m, i) => `
-        <div class="market-row">
-          <span>◉ ${m.market}${i === 0 ? '<span class="badge low">MENOR PREÇO</span>' : ''}</span>
-          <strong>${brl(m.price)}</strong>
-          <span>${m.unit}</span>
-          <span>${m.date}</span>
-          <button class="offer" onclick="openGoogleMaps('${m.market}', '${p.name}')">Ver oferta ↗</button>
+        <!-- 3. Opção Opcional: Rede Atacadista -->
+        <div class="form-field">
+          <label>3. Filtrar por Rede de Supermercado (Opcional)</label>
+          <select id="modal-alerta-rede">
+            <option value="todas">Todas as Redes</option>
+            <option value="Atacadão">Atacadão</option>
+            <option value="Assaí">Assaí Atacadista</option>
+            <option value="Comper">Comper Supermercados</option>
+            <option value="Fort Atacadista">Fort Atacadista</option>
+            <option value="Super Adega">Super Adega</option>
+          </select>
         </div>
-      `).join('')}
+
+        <div class="form-field" style="margin-bottom: 24px;">
+          <label>Preço Alvo (R$)</label>
+          <input type="number" step="0.01" id="modal-alerta-preco" placeholder="Ex: 15.00" required>
+        </div>
+        <button type="submit" class="btn-pri" id="modal-alerta-btn-submit">Salvar Alerta 🦉</button>
+      </form>
     </div>
-    <div class="notice">◷ O preço atual está <b>${Math.abs(p.change)}% abaixo</b> da média da região.</div>
-  `;
-      drawChart(p.price);
-    }
+  </div>
 
-    function drawChart(currentPrice) {
-      const c = document.getElementById("chart");
-      if (!c) return;
-      const ctx = c.getContext("2d"), dpr = window.devicePixelRatio || 1, w = c.clientWidth, h = c.clientHeight;
-      c.width = w * dpr; c.height = h * dpr; ctx.scale(dpr, dpr);
-
-      let labels = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-      if (currentPeriod === '1D') labels = ["06h", "09h", "12h", "15h", "18h", "21h"];
-      if (currentPeriod === '1S') labels = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
-      if (currentPeriod === '1M') labels = ["Sem 1", "Sem 2", "Sem 3", "Sem 4"];
-
-      const base = currentPrice * 0.9;
-      const pointsCount = labels.length;
-
-      // Gerar dados proporcionais aos labels
-      let series = [
-        Array.from({ length: pointsCount }, (_, i) => base * (1.1 + Math.sin(i) * 0.05)),
-        Array.from({ length: pointsCount }, (_, i) => base * (1.02 + Math.cos(i) * 0.04)),
-        Array.from({ length: pointsCount }, (_, i) => i === pointsCount - 1 ? currentPrice : base * (0.95 + Math.sin(i) * 0.03))
-      ];
-
-      const pad = { l: 38, r: 12, t: 14, b: 28 }, min = base * 0.8, max = base * 1.3;
-      const x = i => pad.l + i * (w - pad.l - pad.r) / (pointsCount - 1 || 1);
-      const y = v => pad.t + (max - v) * (h - pad.t - pad.b) / (max - min);
-
-      ctx.clearRect(0, 0, w, h);
-      ctx.font = "10px system-ui"; ctx.strokeStyle = "#e9efec"; ctx.fillStyle = "#7c8d87"; ctx.lineWidth = 1;
-
-      for (let i = 0; i <= 4; i++) {
-        let val = min + (max - min) * (i / 4);
-        ctx.beginPath(); ctx.moveTo(pad.l, y(val)); ctx.lineTo(w - pad.r, y(val)); ctx.stroke();
-        ctx.fillText("R$ " + val.toFixed(0), pad.l - 38, y(val) + 3);
-      }
-      labels.forEach((m, i) => ctx.fillText(m, x(i) - 10, h - 8));
-
-      const colors = ["#e47f8a", "#58a7c4", "#229765"];
-      series.forEach((arr, s) => {
-        ctx.beginPath(); ctx.strokeStyle = colors[s]; ctx.lineWidth = s === 2 ? 2.5 : 1.5;
-        arr.forEach((v, i) => i ? ctx.lineTo(x(i), y(v)) : ctx.moveTo(x(i), y(v)));
-        ctx.stroke();
-        arr.forEach((v, i) => {
-          ctx.beginPath(); ctx.fillStyle = colors[s]; ctx.arc(x(i), y(v), 2.5, 0, Math.PI * 2); ctx.fill();
-        });
-      });
-    }
-
-    function setPeriod(btn, period) {
-      currentPeriod = period;
-      document.querySelectorAll('.periods button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      drawChart(products[selectedIndex].price);
-    }
-
-    function renderHistoricoView(container) {
-      container.innerHTML = `
-    <div class="panel" style="grid-column: 1/-1; padding: 24px;">
-      <h2>⌁ Histórico Geral de Inflação e Preços</h2>
-      <p style="color:var(--muted);font-size:13px">Acompanhamento dos principais itens essenciais nos últimos 12 meses na região de Brasília.</p>
-      <div style="margin-top:20px;padding:20px;background:#f9fbfa;border:1px solid var(--line);border-radius:12px">
-        <h4 style="margin-top:0">Tendência Geral: Estabilidade com viés de baixa</h4>
-        <p style="font-size:13px;color:var(--muted)">Os hortifrútis e grãos apresentaram queda acumulada de 3.2% neste mês, impulsionados pela safra local e concorrência agressiva entre os atacarejos.</p>
+  <!-- Modal Pop-up para Mensagens e Alertas Customizados -->
+  <div class="modal-overlay" id="customAlertModal">
+    <div class="modal" style="max-width: 380px; text-align: center; padding: 30px;">
+      <div id="custom-alert-icon" style="font-size: 42px; margin-bottom: 12px;">🦉</div>
+      <h3 id="custom-alert-title" style="justify-content: center; margin-bottom: 8px; color: var(--brand-dark);">Aviso</h3>
+      <p id="custom-alert-message" style="color: var(--muted); font-size: 14px; line-height: 1.5; margin-bottom: 24px;"></p>
+      
+      <div id="custom-alert-actions" style="display: flex; gap: 10px;">
+        <button class="btn-pri" onclick="closeCustomAlert()">OK</button>
       </div>
     </div>
-  `;
-    }
+  </div>
 
-    function renderMercadosView(container) {
-      container.innerHTML = `
-    <div class="panel" style="grid-column: 1/-1; padding: 24px;">
-      <h2>⇄ Comparativo Geral de Supermercados</h2>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:20px">Ranking dos supermercados mais econômicos na região. Clique para ver no mapa.</p>
-      <div style="display:grid;gap:12px">
-        ${marketsList.map((m, idx) => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:#f9fbfa;border:1px solid var(--line);border-radius:12px">
-            <div>
-              <span style="font-weight:700;font-size:15px">#${idx + 1}${m}</span>
-              <div style="font-size:12px;color:var(--muted);margin-top:2px">Índice de economia: ${idx === 0 ? 'Excelente (Mais barato)' : 'Moderado'}</div>
-            </div>
-            <div style="display:flex;gap:16px;align-items:center">
-              <div style="text-align:right">
-                <strong style="color:var(--green);font-size:16px">${brl(210 + idx * 14.50)}</strong>
-                <div style="font-size:11px;color:var(--muted)">Custo médio</div>
-              </div>
-              <button class="offer" onclick="openGoogleMaps('${m}', 'Supermercado')">Ver no Maps ↗</button>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-    }
-
-    function renderAlertasView(container) {
-      container.innerHTML = `
-    <div class="panel" style="grid-column: 1/-1; padding: 24px;">
-      <h2>♧ Alertas de Queda de Preço</h2>
-      <p style="color:var(--muted);font-size:13px">Configure alertas para ser avisado quando o arroz, leite ou café atingirem seu preço-alvo.</p>
-      <div style="margin-top:20px;display:grid;gap:12px;max-width:450px">
-        <label style="font-size:12px;font-weight:600;color:var(--muted)">Produto desejado</label>
-        <select id="alerta-produto" style="padding:10px;border:1px solid var(--line);border-radius:8px">
-          ${products.map(p => `<option value="${p.name}">${p.name} (${p.size})</option>`).join('')}
-        </select>
-        <label style="font-size:12px;font-weight:600;color:var(--muted)">Preço alvo (R$)</label>
-        <input type="number" id="alerta-preco" placeholder="Ex: 15.00" style="padding:10px;border:1px solid var(--line);border-radius:8px">
-        <button class="btn-pri" onclick="criarAlerta()">Ativar Alerta</button>
-      </div>
-      <div id="alerta-feedback" style="margin-top:15px"></div>
-    </div>
-  `;
-    }
-
-    function criarAlerta() {
-      const prod = document.getElementById('alerta-produto').value;
-      const preco = document.getElementById('alerta-preco').value;
-      const feed = document.getElementById('alerta-feedback');
-      if (!preco) {
-        alert('Por favor, informe um valor de preço alvo.');
-        return;
-      }
-      feed.innerHTML = `<div style="padding:12px;background:var(--green-soft);color:var(--green);border-radius:8px;font-size:12px;font-weight:600">✓ Alerta cadastrado com sucesso para ${prod} abaixo de R$ ${preco}!</div>`;
-    }
-
-    function renderConfigView(container) {
-      container.innerHTML = `
-    <div class="panel" style="grid-column: 1/-1; padding: 24px;">
-      <h2>⚙ Configurações da Conta e Região</h2>
-      <p style="color:var(--muted);font-size:13px">Personalize sua localização e preferências de supermercados monitorados.</p>
-      <div style="margin-top:20px;display:grid;gap:14px;max-width:400px">
-        <div class="form-group"><label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px">Sua Cidade / Região</label><input type="text" id="config-cidade" value="Brasília - DF" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px"></div>
-        <div class="form-group"><label style="display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px">Raio de Busca (km)</label><input type="number" id="config-raio" value="10" style="width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-size:13px"></div>
-        <button class="btn-pri" onclick="salvarConfig()">Salvar Alterações</button>
-        <div id="config-feedback"></div>
-      </div>
-    </div>
-  `;
-    }
-
-    function salvarConfig() {
-      const cidade = document.getElementById('config-cidade').value;
-      const feed = document.getElementById('config-feedback');
-      feed.innerHTML = `<span style="color:var(--green);font-size:12px;font-weight:600">Configurações para "${cidade}" salvas com sucesso!</span>`;
-    }
-
-    function sortProducts(criteria) {
-      if (criteria === 'menor') products.sort((a, b) => a.price - b.price);
-      if (criteria === 'desconto') products.sort((a, b) => a.change - b.change);
-      if (criteria === 'recente') products.sort((a, b) => b.id - a.id);
-      renderProductsList(document.getElementById('search').value.toLowerCase());
-    }
-
-    function openSimulatorModal() {
-      const listEl = document.getElementById('simulator-items-list');
-      const totalEl = document.getElementById('simulator-modal-total');
-      const keys = Object.keys(simulatorCart);
-
-      if (keys.length === 0) {
-        listEl.innerHTML = `<div style="text-align:center;color:var(--muted);padding:20px">Nenhum item adicionado ao simulador. Utilize os botões [+] nos produtos ao lado para simular sua compra.</div>`;
-        totalEl.textContent = brl(0);
-      } else {
-        let html = '';
-        keys.forEach(id => {
-          const qty = simulatorCart[id];
-          const p = products.find(prod => prod.id == id);
-          if (p) {
-            const subtotal = p.price * qty;
-            html += `
-          <div style="display:flex;justify-content:space-between;align-items:center;background:#f9fbfa;padding:10px 14px;border:1px solid var(--line);border-radius:10px">
-            <div style="display:flex;gap:10px;align-items:center">
-              <span style="font-size:20px">${p.emoji}</span>
-              <div>
-                <b>${p.name}</b>
-                <div style="font-size:11px;color:var(--muted)">${qty}x ${brl(p.price)} (${p.size}) • ${p.market}</div>
-              </div>
-            </div>
-            <div style="text-align:right">
-              <strong style="color:var(--green)">${brl(subtotal)}</strong>
-              <div><button onclick="adjustQuantity(${p.id}, -1); openSimulatorModal();" style="font-size:10px;background:none;border:0;color:var(--red);cursor:pointer">Remover 1</button></div>
-            </div>
-          </div>
-        `;
-          }
-        });
-        listEl.innerHTML = html;
-        totalEl.textContent = brl(calculateSimulatorTotal());
-      }
-      document.getElementById('simulatorModal').classList.add('active');
-    }
-
-    function closeSimulatorModal() {
-      document.getElementById('simulatorModal').classList.remove('active');
-    }
-
-    document.addEventListener("input", e => {
-      if (e.target && e.target.id === 'search') {
-        if (currentTab !== 'inicio' && currentTab !== 'produtos') {
-          switchTab('produtos');
-        }
-        renderProductsList(e.target.value.toLowerCase());
-      }
-    });
-
-    window.onload = () => {
-      render();
-    };
-  </script>
+  <script src="script.js"></script>
 </body>
-
 </html>
