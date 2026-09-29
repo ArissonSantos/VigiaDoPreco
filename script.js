@@ -1,4 +1,5 @@
-let currentTab = 'inicio';
+
+    let currentTab = 'inicio';
     let selectedIndex = 0;
     let selectedMarketIndex = 0;
     let simulatorCart = {}; 
@@ -250,6 +251,16 @@ let currentTab = 'inicio';
         else btn.classList.remove('active');
       });
 
+      // Atualizar classe ativa na barra mobile inferior
+      const mobTabs = ['inicio', 'produtos', 'mercados'];
+      mobTabs.forEach(t => {
+        const btn = document.getElementById(`mob-nav-${t}`);
+        if (btn) {
+          if (t === tab) btn.classList.add('active');
+          else btn.classList.remove('active');
+        }
+      });
+
       tabs.forEach(t => {
         const drawerBtn = document.getElementById(`drawer-nav-${t}`);
         if (drawerBtn) {
@@ -286,15 +297,30 @@ let currentTab = 'inicio';
 
     function updateAuthUI() {
       const authBtn = document.getElementById('topbar-auth-btn');
+      
+      const mobAuthBtnText = document.getElementById('mob-nav-auth-text');
+      const mobAuthIcon = document.getElementById('mob-nav-auth-icon');
+      const mobAuthWrapper = document.getElementById('mob-nav-auth');
+      
       if (currentUser) {
         if (authBtn) {
           authBtn.innerHTML = "🔓 Sair";
           authBtn.onclick = handleLogout;
         }
+        if (mobAuthBtnText) {
+          mobAuthBtnText.textContent = "Sair";
+          mobAuthIcon.textContent = "🔓";
+          mobAuthWrapper.onclick = handleLogout;
+        }
       } else {
         if (authBtn) {
           authBtn.innerHTML = "🔒 Entrar";
           authBtn.onclick = openLoginModal;
+        }
+        if (mobAuthBtnText) {
+          mobAuthBtnText.textContent = "Entrar";
+          mobAuthIcon.textContent = "🔒";
+          mobAuthWrapper.onclick = openLoginModal;
         }
       }
       if (currentTab === 'alertas' || currentTab === 'config') render();
@@ -387,7 +413,7 @@ let currentTab = 'inicio';
       if (regionSelect) regionSelect.value = currentRegionFilter;
       
       if (currentTab === 'inicio') {
-        container.className = "content"; // Duas colunas para Ranking e Melhores Ofertas Globais
+        container.className = "content"; 
 
         // 1. Ranking de Redes
         let rankingMap = {};
@@ -401,7 +427,6 @@ let currentTab = 'inicio';
         let topDiscounts = [...products].sort((a, b) => a.change - b.change).slice(0, 10);
 
         container.innerHTML = `
-          <!-- LADO ESQUERDO: RANKING GERAL DE REDES -->
           <div class="panel" style="padding: 20px;">
             <h2 style="color:var(--brand-dark); font-size:18px; margin-top:0;">⇄ Ranking de Redes</h2>
             <p style="color:var(--muted); font-size:13px; margin-bottom:16px">Redes com mais menores preços no Centro-Oeste.</p>
@@ -424,7 +449,6 @@ let currentTab = 'inicio';
             </div>
           </div>
 
-          <!-- LADO DIREITO: MELHORES OFERTAS CADASTRADAS NO SITE -->
           <div class="panel" style="padding: 20px; border-top: 4px solid var(--brand-accent);">
             <h2 style="color:var(--brand-dark); font-size:18px; margin-top:0; display:flex; align-items:center; gap:6px;">
               🔥 Melhores Ofertas do Site
@@ -477,12 +501,10 @@ let currentTab = 'inicio';
             <div class="products" id="products-list"></div>
           </div>
           
-          <!-- COLUNA DIREITA: CARD DE DETALHES + 6 ANÚNCIOS EXTERNOS -->
           <div class="right-column-wrapper">
             <div class="panel detail" id="detail-panel"></div>
             
             <div class="ads-grid-6">
-              <!-- Anúncio 1 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #334155, #0f172a); display:grid; place-items:center; font-size:16px;">🥩</div>
@@ -494,7 +516,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Anúncio 2 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #047857, #065f46); display:grid; place-items:center; font-size:16px;">🥗</div>
@@ -506,7 +527,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Anúncio 3 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #b45309, #78350f); display:grid; place-items:center; font-size:16px;">🍷</div>
@@ -518,7 +538,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Anúncio 4 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #1d4ed8, #1e40af); display:grid; place-items:center; font-size:16px;">🧼</div>
@@ -530,7 +549,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Anúncio 5 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #7c3aed, #5b21b6); display:grid; place-items:center; font-size:16px;">🥖</div>
@@ -542,7 +560,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Anúncio 6 -->
               <div class="ad-card-item">
                 <div class="ad-card-video-box">
                   <div style="position:absolute; inset:0; background:radial-gradient(circle, #db2777, #9d174d); display:grid; place-items:center; font-size:16px;">👶</div>
@@ -606,14 +623,11 @@ let currentTab = 'inicio';
       } else if (currentTab === 'mercados') {
         container.className = "content single-col";
 
-        // MERCADOS PERTO DE MIM + MELHORES OFERTAS DESSES MERCADOS (Calculado por % de desconto frente à média geral)
         let marketsWithDistance = coMarkets.map(m => {
           let dist = userCoords ? calcularDistanciaKm(userCoords.lat, userCoords.lng, m.lat, m.lng) : 0;
           return { ...m, distance: dist };
         });
         marketsWithDistance.sort((a, b) => a.distance - b.distance);
-
-        // Pegar os 3 mercados mais próximos
         let closestMarkets = marketsWithDistance.slice(0, 3);
 
         container.innerHTML = `
@@ -627,12 +641,10 @@ let currentTab = 'inicio';
 
             <div style="display:grid; gap:20px;">
               ${closestMarkets.map(m => {
-                // Encontrar ofertas deste mercado e calcular % de desconto vs média geral do produto
                 let offersOfThisMarket = [];
                 products.forEach(p => {
                   let foundInMarket = p.markets.find(mo => mo.market === m.name);
                   if (foundInMarket) {
-                    // Média de preço do produto nos outros mercados
                     let sumOthers = 0, countOthers = 0;
                     p.markets.forEach(mo => {
                       if (mo.market !== m.name) { sumOthers += mo.price; countOthers++; }
@@ -652,7 +664,6 @@ let currentTab = 'inicio';
                   }
                 });
 
-                // Ordenar por maior desconto
                 offersOfThisMarket.sort((a, b) => b.discount - a.discount);
                 let topOffers = offersOfThisMarket.slice(0, 3);
 
@@ -757,7 +768,6 @@ let currentTab = 'inicio';
             <div class="panel" style="padding: 28px; max-width: 640px; margin: 0 auto; display: grid; gap: 24px;">
               <h2 style="color:var(--brand-dark); margin: 0;">⚙ Configurações de Conta e Região</h2>
               
-              <!-- Preferência Regional -->
               <div style="background:var(--bg); padding:16px; border-radius:12px; border:1px solid var(--line);">
                 <h3 style="margin:0 0 12px 0; font-size:15px; color:var(--brand-dark);">📍 Estado Principal no Centro-Oeste</h3>
                 <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
@@ -771,7 +781,6 @@ let currentTab = 'inicio';
                 </div>
               </div>
 
-              <!-- Alterar Dados de Usuário e Senha -->
               <div style="background:var(--bg); padding:16px; border-radius:12px; border:1px solid var(--line);">
                 <h3 style="margin:0 0 14px 0; font-size:15px; color:var(--brand-dark);">🔒 Dados de Acesso & Segurança</h3>
                 <form onsubmit="atualizarCredenciaisConta(event)" style="display:grid; gap:14px;">
@@ -789,7 +798,6 @@ let currentTab = 'inicio';
                 </form>
               </div>
 
-              <!-- Zona de Perigo: Apagar Conta -->
               <div style="background:var(--red-soft); padding:16px; border-radius:12px; border:1px solid #fca5a5;">
                 <h3 style="margin:0 0 6px 0; font-size:15px; color:var(--red);">⚠️ Zona de Perigo</h3>
                 <p style="font-size:13px; color:var(--muted); margin:0 0 14px 0;">Apagar sua conta removerá permanentemente todos os seus alertas ativos, histórico e preferências do Vigia do Preço.</p>
@@ -1224,23 +1232,9 @@ let currentTab = 'inicio';
       }
     });
 
-    function checkMobileView() {
-      const bottomNav = document.getElementById('mobile-bottom-nav');
-      if (window.innerWidth <= 900) {
-        if(bottomNav) bottomNav.style.display = 'flex';
-      } else {
-        if(bottomNav) {
-          bottomNav.style.display = 'none';
-          document.getElementById('mobileMenuDrawer').classList.remove('active');
-        }
-      }
-    }
-    window.addEventListener('resize', checkMobileView);
-
     window.onload = () => { 
         initUserGeolocation();
         render(); 
         updateSimulatorStatDisplay(); 
         updateAuthUI();
-        checkMobileView();
     };

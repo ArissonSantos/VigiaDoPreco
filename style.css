@@ -107,7 +107,7 @@
       border: 1px solid rgba(255,255,255,0.05);
     }
 
-    main { min-width: 0; height: 100vh; overflow-y: auto; padding-bottom: 70px; }
+    main { min-width: 0; height: 100vh; overflow-y: auto; padding-bottom: 80px; }
 
     .topbar {
       height: 76px;
@@ -405,10 +405,40 @@
 
     .active-alert-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; gap: 12px; }
 
-    /* Menu Expandível Mobile */
+    /* Barra Inferior e Menus Mobile */
+    .mobile-bottom-nav {
+      display: none; 
+      position: fixed; 
+      bottom: 0; 
+      left: 0; 
+      right: 0; 
+      background: var(--brand-dark); 
+      z-index: 50; 
+      padding: 10px 8px; 
+      justify-content: space-between; 
+      align-items: center; 
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+    .mob-btn {
+      background: transparent;
+      color: #9ca3af;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+      font-size: 16px;
+      transition: 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .mob-btn span.label { font-size: 10px; font-weight: 500; }
+    .mob-btn.active, .mob-btn:hover { color: var(--brand-accent); }
+
     .mobile-menu-drawer {
       position: fixed;
-      bottom: 60px;
+      bottom: 70px;
       left: 10px;
       right: 10px;
       background: var(--brand-dark);
@@ -442,26 +472,25 @@
 
     /* Media Queries para Responsividade (Celular / Tablet) */
     @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 1fr;
+      .app { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .content { grid-template-columns: 1fr; padding: 16px; }
+      .right-column-wrapper { position: static; }
+      
+      .topbar { 
+        padding: 0 16px; 
+        gap: 8px; 
+        height: 64px; 
+        justify-content: space-between;
       }
-      .sidebar {
-        display: none; 
-      }
-      .content {
-        grid-template-columns: 1fr;
-        padding: 16px;
-      }
-      .right-column-wrapper {
-        position: static;
-      }
-      .topbar {
-        padding: 0 16px;
-        gap: 8px;
-        height: 64px;
-      }
+      
+      /* Oculta os botões originais no mobile, deixando apenas logo e filtro */
+      .topbar .login-btn, .topbar .cart-toggle-btn { display: none; }
+      
+      .location-selector { margin-left: 0; padding: 6px 10px; }
       .location-selector span { display: none; }
-      .metrics {
-        grid-template-columns: repeat(2, 1fr);
-      }
+      .location-selector select { max-width: 140px; }
+      
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .mobile-bottom-nav { display: flex; }
     }

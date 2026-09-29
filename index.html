@@ -29,18 +29,18 @@
     </aside>
     <main>
       <header class="topbar">
-        <div style="font-weight:700; color:var(--brand-dark); font-size:15px; display:flex; align-items:center; gap:6px;">
-          <span>🦉</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">Vigia Centro-Oeste</span>
+        <div style="font-weight:800; color:var(--brand-dark); font-size:16px; display:flex; align-items:center; gap:6px;">
+          <span>🦉</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">Vigia do Preço</span>
         </div>
         
         <div class="location-selector">
           <span>📍</span>
           <select id="global-region-select" onchange="changeGlobalRegion(this.value)">
-            <option value="Todas">Centro-Oeste (Todas as Regiões)</option>
-            <option value="DF">Distrito Federal (Brasília e Entorno)</option>
-            <option value="GO">Goiás (Goiânia, Anápolis, Rio Verde)</option>
-            <option value="MT">Mato Grosso (Cuiabá, Rondonópolis, V. Grande)</option>
-            <option value="MS">Mato Grosso do Sul (Campo Grande, Dourados)</option>
+            <option value="Todas">Centro-Oeste</option>
+            <option value="DF">Distrito Federal</option>
+            <option value="GO">Goiás</option>
+            <option value="MT">Mato Grosso</option>
+            <option value="MS">Mato Grosso do Sul</option>
           </select>
         </div>
         
@@ -53,13 +53,26 @@
         </button>
       </header>
 
-      <!-- Barra de Navegação Inferior para Celulares (Expandível) -->
-      <div style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--brand-dark); z-index:50; padding:10px 16px; justify-content:space-around; align-items:center; border-top:1px solid rgba(255,255,255,0.1);" id="mobile-bottom-nav">
-        <button onclick="switchTab('inicio')" id="mob-nav-inicio" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">⌂ <span style="font-size:10px">Início</span></button>
-        <button onclick="switchTab('produtos')" id="mob-nav-produtos" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">▦ <span style="font-size:10px">Comparar</span></button>
-        <button onclick="switchTab('alertas')" id="mob-nav-alertas" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">♧ <span style="font-size:10px">Alertas</span></button>
-        <button onclick="switchTab('mercados')" id="mob-nav-mercados" style="background:none;color:#9ca3af;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px">📍 <span style="font-size:10px">Perto</span></button>
-        <button onclick="toggleMobileMenu()" style="background:none;color:var(--brand-accent);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;">☰ <span style="font-size:10px">Mais</span></button>
+      <!-- Nova Barra de Navegação Inferior para Celulares (Filtros, Cesta e Login) -->
+      <div class="mobile-bottom-nav" id="mobile-bottom-nav">
+        <button onclick="switchTab('inicio')" id="mob-nav-inicio" class="mob-btn active">
+          ⌂ <span class="label">Início</span>
+        </button>
+        <button onclick="switchTab('produtos')" id="mob-nav-produtos" class="mob-btn">
+          ▦ <span class="label">Comparar</span>
+        </button>
+        <button onclick="switchTab('mercados')" id="mob-nav-mercados" class="mob-btn">
+          📍 <span class="label">Perto</span>
+        </button>
+        <button onclick="openSimulatorModal()" id="mob-nav-cart" class="mob-btn">
+          🛒 <span class="label">Cesta</span>
+        </button>
+        <button onclick="openLoginModal()" id="mob-nav-auth" class="mob-btn">
+          <span id="mob-nav-auth-icon">🔒</span> <span class="label" id="mob-nav-auth-text">Entrar</span>
+        </button>
+        <button onclick="toggleMobileMenu()" class="mob-btn" style="color:var(--brand-accent);">
+          ☰ <span class="label">Mais</span>
+        </button>
       </div>
 
       <!-- Gaveta Expandível do Menu Mobile -->
@@ -158,7 +171,6 @@
           </select>
         </div>
 
-        <!-- 1. Opção Principal: Estados -->
         <div class="form-field">
           <label>1. Filtrar por Estado / Região</label>
           <select id="modal-alerta-estado" onchange="onAlertEstadoChange(this.value)" required>
@@ -170,15 +182,11 @@
           </select>
         </div>
 
-        <!-- 2. Opção Condicional: Cidades -->
         <div class="form-field" id="wrapper-cidades" style="display:none;">
           <label>2. Filtrar por Cidade / Polo Específico</label>
-          <select id="modal-alerta-cidade">
-            <!-- Populado dinamicamente -->
-          </select>
+          <select id="modal-alerta-cidade"></select>
         </div>
 
-        <!-- 3. Opção Opcional: Rede Atacadista -->
         <div class="form-field">
           <label>3. Filtrar por Rede de Supermercado (Opcional)</label>
           <select id="modal-alerta-rede">
